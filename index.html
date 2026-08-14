@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpos em Movimento — Demonstrativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500;1,9..144,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --khaki:#cdc396;
+    --khaki-deep:#b7ac7c;
+    --ink:#1b1915;
+    --ink-soft:#2a2620;
+    --cream:#f4efdd;
+    --line:rgba(27,25,21,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Fraunces',serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--ink);color:var(--cream);}
+
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:16px;height:2px;
+    background:var(--khaki-deep);
+    display:inline-block;
+  }
+
+  h1,h2,h3{
+    font-family:'Anton',sans-serif;
+    font-weight:400;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:0.95;
+  }
+
+  a{color:inherit;}
+
+  /* ---------- PROTO BADGE ---------- */
+  .proto-badge{
+    position:fixed;
+    top:18px; right:18px;
+    z-index:500;
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    padding:8px 12px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  }
+  .proto-badge .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--khaki);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:.4; transform:scale(1.4);}
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;
+    top:0;left:0;right:0;
+    z-index:400;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 40px;
+    mix-blend-mode:normal;
+    transition:background .4s ease, padding .4s ease, border-color .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    background:rgba(244,239,221,0.88);
+    backdrop-filter:blur(10px);
+    padding:12px 40px;
+    border-bottom:1px solid var(--line);
+  }
+  .nav-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+  }
+  .nav-brand img{height:26px;display:block;}
+  .nav-brand span{
+    font-family:'Anton',sans-serif;
+    font-size:14px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:34px;
+  }
+  nav ul li a{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    text-decoration:none;
+    position:relative;
+    padding-bottom:3px;
+  }
+  nav ul li a::after{
+    content:"";
+    position:absolute;
+    left:0;bottom:0;
+    width:0%;height:2px;
+    background:var(--ink);
+    transition:width .3s ease;
+  }
+  nav ul li a:hover::after{width:100%;}
+  .nav-toggle{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    background:var(--khaki);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:120px 24px 80px;
+    overflow:hidden;
+  }
+  .hero-line-svg{
+    position:absolute;
+    inset:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    opacity:0.9;
+  }
+  .hero-line-svg path{
+    fill:none;
+    stroke:var(--ink);
+    stroke-width:1.4;
+    stroke-linecap:round;
+    opacity:0.16;
+  }
+  .hero-line-svg .accent-path{
+    stroke:var(--ink);
+    opacity:0.4;
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:draw 2.6s cubic-bezier(.65,0,.35,1) .3s forwards;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  .hero-mark{
+    width:min(110px, 22vw);
+    margin-bottom:10px;
+    animation:floaty 7s ease-in-out infinite;
+    filter:drop-shadow(0 10px 24px rgba(27,25,21,0.18));
+  }
+  @keyframes floaty{
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    50%{transform:translateY(-10px) rotate(-2deg);}
+  }
+  .hero-title{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    color:var(--ink);
+  }
+  .hero-title .line-sm{
+    font-family:'Space Mono',monospace;
+    font-size:clamp(12px,1.6vw,16px);
+    letter-spacing:0.32em;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .hero-title .line-lg{
+    font-size:clamp(56px,12vw,150px);
+    letter-spacing:0.005em;
+  }
+  .hero-tagline{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(18px,2.4vw,26px);
+    max-width:560px;
+    margin:26px auto 0;
+    color:var(--ink-soft);
+  }
+  .hero-meta{
+    margin-top:34px;
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .hero-meta .eyebrow{color:var(--ink-soft);}
+
+  .scroll-cue{
+    position:absolute;
+    bottom:34px; left:50%;
+    transform:translateX(-50%);
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    color:var(--ink-soft);
+  }
+  .scroll-cue .stick{
+    width:1px;height:38px;
+    background:linear-gradient(var(--ink-soft), transparent);
+    animation:stickmove 2s ease-in-out infinite;
+  }
+  @keyframes stickmove{
+    0%{opacity:0; transform:translateY(-6px);}
+    40%{opacity:1;}
+    100%{opacity:0; transform:translateY(10px);}
+  }
+
+  /* ---------- reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{
+    padding:120px 40px;
+    position:relative;
+  }
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  /* ---------- SINOPSE ---------- */
+  .sinopse{
+    background:var(--ink);
+    color:var(--cream);
+  }
+  .sinopse .eyebrow{color:var(--khaki);}
+  .sinopse .eyebrow::before{background:var(--khaki);}
+  .sinopse-grid{
+    display:grid;
+    grid-template-columns:1fr 1.1fr;
+    gap:60px;
+    margin-top:36px;
+    align-items:start;
+  }
+  .sinopse-quote{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:clamp(28px,3.4vw,44px);
+    line-height:1.18;
+    color:var(--cream);
+  }
+  .sinopse-quote em{color:var(--khaki); font-style:italic;}
+  .sinopse-body p{
+    font-size:16.5px;
+    line-height:1.75;
+    color:#d9d2b8;
+    max-width:46ch;
+  }
+  .sinopse-body p + p{margin-top:16px;}
+
+  /* ---------- FICHA (4 Ps) ---------- */
+  .ficha{background:var(--cream);}
+  .ficha-head{max-width:640px;}
+  .ficha-head h2{font-size:clamp(36px,5vw,58px); margin-top:14px;}
+  .ficha-grid{
+    margin-top:56px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border-top:1px solid var(--line);
+    border-left:1px solid var(--line);
+  }
+  .ficha-card{
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:34px 26px 40px;
+    transition:background .35s ease;
+  }
+  .ficha-card:hover{background:rgba(27,25,21,0.035);}
+  .ficha-num{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--khaki-deep);
+    text-transform:uppercase;
+  }
+  .ficha-card h3{
+    font-size:23px;
+    margin:16px 0 14px;
+  }
+  .ficha-card p{
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+  .ficha-rule{
+    width:26px;height:3px;
+    background:var(--khaki-deep);
+    margin-top:16px;
+  }
+
+  /* ---------- ONDE ASSISTIR ---------- */
+  .onde{
+    background:var(--khaki);
+  }
+  .onde .eyebrow{color:var(--ink-soft);}
+  .onde-head{max-width:640px;}
+  .onde-head h2{font-size:clamp(34px,4.6vw,52px); margin-top:14px;}
+  .onde-head p{margin-top:18px; font-size:16px; line-height:1.7; color:var(--ink-soft); max-width:52ch;}
+  .canais{
+    margin-top:54px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .canal{
+    background:var(--khaki);
+    padding:38px 22px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    transition:transform .3s ease;
+  }
+  .canal:hover{transform:translateY(-6px);}
+  .canal svg{width:30px;height:30px;}
+  .canal span{
+    font-family:'Space Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .free-badge{
+    margin-top:44px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--ink);
+    color:var(--cream);
+    padding:10px 18px;
+    border-radius:999px;
+    font-family:'Space Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .free-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--khaki);}
+
+  /* ---------- PROMOÇÃO / TÁTICAS ---------- */
+  .taticas{background:var(--cream);}
+  .taticas-head{max-width:640px;}
+  .taticas-head h2{font-size:clamp(34px,4.6vw,52px); margin-top:14px;}
+  .taticas-row{
+    margin-top:54px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:34px;
+  }
+  .tatica{
+    border-top:2px solid var(--ink);
+    padding-top:20px;
+  }
+  .tatica h3{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:600;
+    text-transform:none;
+    font-size:22px;
+    margin-bottom:12px;
+  }
+  .tatica p{
+    font-size:14.5px;
+    line-height:1.7;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- CTA / FOOTER ---------- */
+  footer{
+    background:var(--ink);
+    color:var(--cream);
+    padding:110px 40px 40px;
+  }
+  .cta h2{
+    font-size:clamp(38px,7vw,92px);
+    max-width:900px;
+    color:var(--cream);
+  }
+  .cta h2 .accent{color:var(--khaki); font-family:'Fraunces',serif; font-style:italic; text-transform:none; font-weight:500; font-size:0.55em; display:block; margin-top:10px; letter-spacing:0;}
+  .cta-sub{
+    margin-top:26px;
+    font-size:15px;
+    color:#c9c0a1;
+    max-width:44ch;
+    line-height:1.7;
+  }
+  .footer-bottom{
+    margin-top:110px;
+    padding-top:26px;
+    border-top:1px solid rgba(244,239,221,0.14);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .footer-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .footer-brand img{height:20px; opacity:0.95;}
+  .footer-brand span{
+    font-family:'Anton',sans-serif;
+    font-size:13px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    color:var(--cream);
+  }
+  .footer-bottom .fine{
+    font-family:'Space Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    color:#8b8570;
+    text-transform:uppercase;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:860px){
+    nav{padding:16px 20px;}
+    nav ul{
+      position:fixed;
+      top:0; right:-100%;
+      width:72%; height:100svh;
+      background:var(--ink);
+      flex-direction:column;
+      justify-content:center;
+      align-items:flex-start;
+      gap:26px;
+      padding:40px;
+      transition:right .4s ease;
+    }
+    nav ul.open{right:0;}
+    nav ul li a{color:var(--cream); font-size:15px;}
+    .nav-toggle{
+      display:flex;
+      flex-direction:column;
+      gap:5px;
+      background:none;border:none;
+      cursor:pointer;
+      z-index:410;
+    }
+    .nav-toggle span{width:22px;height:2px;background:var(--ink);}
+    section{padding:80px 22px;}
+    .sinopse-grid{grid-template-columns:1fr; gap:34px;}
+    .ficha-grid{grid-template-columns:1fr 1fr;}
+    .canais{grid-template-columns:1fr 1fr;}
+    .taticas-row{grid-template-columns:1fr; gap:40px;}
+    .footer-bottom{flex-direction:column; align-items:flex-start;}
+  }
+  @media (max-width:480px){
+    .ficha-grid{grid-template-columns:1fr;}
+    .canais{grid-template-columns:1fr 1fr;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="proto-badge"><span class="dot"></span> Protótipo — demonstrativo</div>
+
+<nav id="nav">
+  <a href="#" class="nav-brand">
+    <img src="data:image/png;base64,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" alt="">
+    <span>Corpos em Movimento</span>
+  </a>
+  <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="navList">
+    <li><a href="#sinopse">O documentário</a></li>
+    <li><a href="#ficha">O projeto</a></li>
+    <li><a href="#onde">Onde assistir</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <svg class="hero-line-svg" viewBox="0 0 1200 800" preserveAspectRatio="none">
+    <path d="M -50 650 C 200 550, 350 720, 600 600 S 950 480, 1250 560" />
+    <path class="accent-path" d="M -50 200 C 250 120, 300 320, 620 220 S 900 100, 1260 240" />
+  </svg>
+  <img class="hero-mark" src="data:image/png;base64,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" alt="">
+  <h1 class="hero-title">
+    <span class="line-sm">Corpos em</span>
+    <span class="line-lg">Movimento</span>
+  </h1>
+  <p class="hero-tagline">Um documentário sobre a história da dança contemporânea — contada pelos corpos que a fizeram.</p>
+  <div class="hero-meta">
+    <span class="eyebrow">Documentário</span>
+    <span class="eyebrow">Acesso gratuito</span>
+    <span class="eyebrow">Em produção</span>
+  </div>
+  <div class="scroll-cue"><span>role</span><span class="stick"></span></div>
+</header>
+
+<section class="sinopse" id="sinopse">
+  <div class="wrap">
+    <span class="eyebrow">O documentário</span>
+    <div class="sinopse-grid">
+      <p class="sinopse-quote reveal">A dança contemporânea não nasceu de um passo. Nasceu de <em>corpos</em> que decidiram se mover diferente.</p>
+      <div class="sinopse-body reveal">
+        <p>Corpos em Movimento é um documentário audiovisual que percorre a história da dança contemporânea através de quem viveu e constrói essa linguagem no dia a dia — bailarinos, coreógrafos, professores e escolas.</p>
+        <p>Pensado para circular livremente, o filme é feito para ser visto por qualquer pessoa, em qualquer tela: da sala de aula ao feed do celular.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ficha" id="ficha">
+  <div class="wrap">
+    <div class="ficha-head reveal">
+      <span class="eyebrow">O projeto</span>
+      <h2>Ficha técnica<br>do projeto</h2>
+    </div>
+    <div class="ficha-grid reveal">
+      <div class="ficha-card">
+        <span class="ficha-num">Produto</span>
+        <div class="ficha-rule"></div>
+        <h3>O filme</h3>
+        <p>Documentário audiovisual sobre a história da dança contemporânea.</p>
+      </div>
+      <div class="ficha-card">
+        <span class="ficha-num">Preço</span>
+        <div class="ficha-rule"></div>
+        <h3>Acesso livre</h3>
+        <p>Gratuito, com amplo acesso ao conteúdo para qualquer público.</p>
+      </div>
+      <div class="ficha-card">
+        <span class="ficha-num">Praça</span>
+        <div class="ficha-rule"></div>
+        <h3>Onde circula</h3>
+        <p>Plataformas digitais como YouTube, Instagram e TikTok, além de apresentações em escolas e eventos culturais.</p>
+      </div>
+      <div class="ficha-card">
+        <span class="ficha-num">Promoção</span>
+        <div class="ficha-rule"></div>
+        <h3>Como chega até você</h3>
+        <p>Redes sociais, teasers, divulgação em instituições de ensino e parcerias com escolas de dança.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="onde" id="onde">
+  <div class="wrap">
+    <div class="onde-head reveal">
+      <span class="eyebrow">Praça</span>
+      <h2>Onde assistir</h2>
+      <p>Distribuição em amplo acesso digital, pensada para acompanhar o público onde ele já está.</p>
+    </div>
+    <div class="canais reveal">
+      <div class="canal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1b1915" stroke-width="1.6"><path d="M22 8.4v7.2c0 2-1.6 3.6-3.6 3.6H5.6C3.6 19.2 2 17.6 2 15.6V8.4C2 6.4 3.6 4.8 5.6 4.8h12.8C20.4 4.8 22 6.4 22 8.4z"/><path d="M10 8.6l6 3.4-6 3.4V8.6z" fill="#1b1915" stroke="none"/></svg>
+        <span>YouTube</span>
+      </div>
+      <div class="canal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1b1915" stroke-width="1.6"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.4"/><circle cx="17.6" cy="6.4" r="1"/></svg>
+        <span>Instagram</span>
+      </div>
+      <div class="canal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1b1915" stroke-width="1.6"><path d="M16 3v10.4a3.6 3.6 0 1 1-3.2-3.58"/><path d="M16 3c.5 2.4 2.2 4 4.6 4.2"/></svg>
+        <span>TikTok</span>
+      </div>
+      <div class="canal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1b1915" stroke-width="1.6"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M6 10.5V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-5.5"/></svg>
+        <span>Escolas</span>
+      </div>
+    </div>
+    <div class="free-badge reveal"><span class="dot"></span> Acesso 100% gratuito</div>
+  </div>
+</section>
+
+<section class="taticas">
+  <div class="wrap">
+    <div class="taticas-head reveal">
+      <span class="eyebrow">Promoção</span>
+      <h2>Como o filme<br>ganha alcance</h2>
+    </div>
+    <div class="taticas-row reveal">
+      <div class="tatica">
+        <h3>Teasers</h3>
+        <p>Produção de teasers para redes sociais, criados para apresentar o filme antes do lançamento e gerar expectativa.</p>
+      </div>
+      <div class="tatica">
+        <h3>Redes sociais</h3>
+        <p>Divulgação contínua em plataformas digitais, acompanhando o público onde ele já consome conteúdo.</p>
+      </div>
+      <div class="tatica">
+        <h3>Parcerias com escolas</h3>
+        <p>Divulgação em instituições de ensino e parcerias com escolas de dança, ampliando o alcance do projeto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contato">
+  <div class="wrap cta">
+    <h2 class="reveal">Vamos colocar<br>esse projeto<span class="accent">em movimento?</span></h2>
+    <p class="cta-sub reveal">Esta é uma versão demonstrativa da identidade e da proposta de site para o projeto Corpos em Movimento — pronta para apresentação e ajustes junto ao cliente.</p>
+  </div>
+  <div class="footer-bottom wrap">
+    <div class="footer-brand">
+      <img src="data:image/png;base64,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" alt="">
+      <span>Corpos em Movimento</span>
+    </div>
+    <span class="fine">© 2026 · Corpos em Movimento · Protótipo de demonstração</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const toggle = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
+  toggle.addEventListener('click', () => navList.classList.toggle('open'));
+  navList.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navList.classList.remove('open')));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
