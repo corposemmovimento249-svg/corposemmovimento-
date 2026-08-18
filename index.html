@@ -33,13 +33,6 @@
     text-transform:uppercase;
     display:inline-flex;
     align-items:center;
-    gap:8px;
-  }
-  .eyebrow::before{
-    content:"";
-    width:16px;height:2px;
-    background:var(--khaki-deep);
-    display:inline-block;
   }
 
   h1,h2,h3{
@@ -51,34 +44,6 @@
   }
 
   a{color:inherit;}
-
-  /* ---------- PROTO BADGE ---------- */
-  .proto-badge{
-    position:fixed;
-    top:18px; right:18px;
-    z-index:500;
-    background:var(--ink);
-    color:var(--cream);
-    font-family:'Space Mono',monospace;
-    font-size:10px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    padding:8px 12px;
-    border-radius:999px;
-    display:flex;
-    align-items:center;
-    gap:7px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.18);
-  }
-  .proto-badge .dot{
-    width:6px;height:6px;border-radius:50%;
-    background:var(--khaki);
-    animation:pulse 1.8s ease-in-out infinite;
-  }
-  @keyframes pulse{
-    0%,100%{opacity:1; transform:scale(1);}
-    50%{opacity:.4; transform:scale(1.4);}
-  }
 
   /* ---------- NAV ---------- */
   nav{
@@ -152,29 +117,6 @@
     padding:120px 24px 80px;
     overflow:hidden;
   }
-  .hero-line-svg{
-    position:absolute;
-    inset:0;
-    width:100%;height:100%;
-    pointer-events:none;
-    opacity:0.9;
-  }
-  .hero-line-svg path{
-    fill:none;
-    stroke:var(--ink);
-    stroke-width:1.4;
-    stroke-linecap:round;
-    opacity:0.16;
-  }
-  .hero-line-svg .accent-path{
-    stroke:var(--ink);
-    opacity:0.4;
-    stroke-dasharray:900;
-    stroke-dashoffset:900;
-    animation:draw 2.6s cubic-bezier(.65,0,.35,1) .3s forwards;
-  }
-  @keyframes draw{ to{ stroke-dashoffset:0; } }
-
   .hero-mark{
     width:min(110px, 22vw);
     margin-bottom:10px;
@@ -269,7 +211,6 @@
     color:var(--cream);
   }
   .sinopse .eyebrow{color:var(--khaki);}
-  .sinopse .eyebrow::before{background:var(--khaki);}
   .sinopse-grid{
     display:grid;
     grid-template-columns:1fr 1.1fr;
@@ -344,23 +285,26 @@
   .onde-head p{margin-top:18px; font-size:16px; line-height:1.7; color:var(--ink-soft); max-width:52ch;}
   .canais{
     margin-top:54px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:16px;
   }
   .canal{
     background:var(--khaki);
-    padding:38px 22px;
+    border:1px solid rgba(27,25,21,0.16);
+    border-radius:14px;
+    padding:34px 40px;
+    min-width:150px;
+    flex:0 1 150px;
     text-align:center;
     display:flex;
     flex-direction:column;
     align-items:center;
     gap:14px;
-    transition:transform .3s ease;
+    transition:transform .3s ease, border-color .3s ease, background .3s ease;
   }
-  .canal:hover{transform:translateY(-6px);}
+  .canal:hover{transform:translateY(-6px); border-color:var(--ink); background:var(--cream);}
   .canal svg{width:30px;height:30px;}
   .canal span{
     font-family:'Space Mono',monospace;
@@ -462,7 +406,217 @@
     text-transform:uppercase;
   }
 
-  /* ---------- RESPONSIVE ---------- */
+  /* ---------- ASSISTENTE (widget) ---------- */
+  .assist-fab{
+    position:fixed;
+    right:22px; bottom:22px;
+    z-index:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--ink);
+    color:var(--cream);
+    border:none;
+    cursor:pointer;
+    padding:14px 20px 14px 14px;
+    border-radius:999px;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    box-shadow:0 10px 26px rgba(0,0,0,0.28);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .assist-fab:hover{transform:translateY(-3px); box-shadow:0 14px 30px rgba(0,0,0,0.34);}
+  .assist-fab .fab-dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--khaki);
+    animation:pulse 1.8s ease-in-out infinite;
+    flex-shrink:0;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:.4; transform:scale(1.4);}
+  }
+  .assist-fab.hidden{transform:translateY(120%); opacity:0;}
+
+  .assist-overlay{
+    position:fixed; inset:0;
+    background:rgba(15,14,11,0.55);
+    backdrop-filter:blur(3px);
+    z-index:700;
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-end;
+    padding:0;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .assist-overlay.open{opacity:1; pointer-events:auto;}
+
+  .assist-panel{
+    width:min(420px, 100vw);
+    height:min(680px, 100svh);
+    background:var(--cream);
+    display:flex;
+    flex-direction:column;
+    border-radius:18px 18px 0 0;
+    overflow:hidden;
+    transform:translateY(24px);
+    transition:transform .35s cubic-bezier(.2,.7,.2,1);
+    box-shadow:0 -10px 40px rgba(0,0,0,0.3);
+  }
+  @media (min-width:620px){
+    .assist-overlay{padding:24px;}
+    .assist-panel{border-radius:18px; height:min(640px,86svh);}
+  }
+  .assist-overlay.open .assist-panel{transform:translateY(0);}
+
+  .assist-head{
+    background:var(--ink);
+    color:var(--cream);
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-shrink:0;
+  }
+  .assist-head-id{display:flex; align-items:center; gap:10px;}
+  .assist-head-id img{height:22px;}
+  .assist-head-id div{display:flex; flex-direction:column;}
+  .assist-head-id .name{
+    font-family:'Anton',sans-serif;
+    font-size:13px;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+  }
+  .assist-head-id .sub{
+    font-family:'Space Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--khaki);
+    margin-top:2px;
+  }
+  .assist-close{
+    background:none; border:none; cursor:pointer;
+    color:var(--cream);
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    border-radius:50%;
+    transition:background .2s ease;
+  }
+  .assist-close:hover{background:rgba(244,239,221,0.12);}
+
+  .assist-body{
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .assist-body::-webkit-scrollbar{width:6px;}
+  .assist-body::-webkit-scrollbar-thumb{background:var(--line); border-radius:3px;}
+
+  .msg{
+    max-width:84%;
+    padding:12px 14px;
+    border-radius:14px;
+    font-size:14px;
+    line-height:1.55;
+    animation:msgIn .35s ease both;
+  }
+  @keyframes msgIn{
+    from{opacity:0; transform:translateY(8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .msg.bot{
+    background:#fff;
+    border:1px solid var(--line);
+    align-self:flex-start;
+    border-bottom-left-radius:4px;
+    color:var(--ink);
+  }
+  .msg.user{
+    background:var(--ink);
+    color:var(--cream);
+    align-self:flex-end;
+    border-bottom-right-radius:4px;
+  }
+  .typing{
+    display:flex; gap:4px; align-self:flex-start;
+    padding:14px 16px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    border-bottom-left-radius:4px;
+  }
+  .typing span{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--khaki-deep);
+    animation:typingBounce 1.1s ease-in-out infinite;
+  }
+  .typing span:nth-child(2){animation-delay:.15s;}
+  .typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes typingBounce{
+    0%,60%,100%{transform:translateY(0); opacity:.5;}
+    30%{transform:translateY(-4px); opacity:1;}
+  }
+
+  .assist-options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-self:stretch;
+    margin-top:2px;
+  }
+  .assist-opt{
+    text-align:left;
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:11px 14px;
+    border-radius:10px;
+    font-family:'Fraunces',serif;
+    font-size:13.5px;
+    cursor:pointer;
+    transition:border-color .2s ease, background .2s ease, transform .15s ease;
+  }
+  .assist-opt:hover{border-color:var(--ink); background:var(--khaki); transform:translateX(2px);}
+  .assist-opt:disabled{opacity:0.45; cursor:default; transform:none;}
+
+  .assist-foot{
+    padding:12px 20px 18px;
+    border-top:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .assist-foot .restart{
+    width:100%;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:9px;
+    border-radius:8px;
+    font-family:'Space Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .assist-foot .restart:hover{border-color:var(--ink); color:var(--ink);}
+
+  .assist-cta{
+    background:var(--ink);
+    color:var(--cream) !important;
+    border-color:var(--ink) !important;
+  }
+  .assist-cta:hover{background:var(--ink-soft); transform:translateX(2px);}
+
+
   @media (max-width:860px){
     nav{padding:16px 20px;}
     nav ul{
@@ -491,13 +645,12 @@
     section{padding:80px 22px;}
     .sinopse-grid{grid-template-columns:1fr; gap:34px;}
     .ficha-grid{grid-template-columns:1fr 1fr;}
-    .canais{grid-template-columns:1fr 1fr;}
     .taticas-row{grid-template-columns:1fr; gap:40px;}
     .footer-bottom{flex-direction:column; align-items:flex-start;}
   }
   @media (max-width:480px){
     .ficha-grid{grid-template-columns:1fr;}
-    .canais{grid-template-columns:1fr 1fr;}
+    .canal{flex:1 1 100%;}
   }
 
   @media (prefers-reduced-motion:reduce){
@@ -506,8 +659,6 @@
 </style>
 </head>
 <body>
-
-<div class="proto-badge"><span class="dot"></span> Protótipo — demonstrativo</div>
 
 <nav id="nav">
   <a href="#" class="nav-brand">
@@ -526,10 +677,6 @@
 </nav>
 
 <header class="hero">
-  <svg class="hero-line-svg" viewBox="0 0 1200 800" preserveAspectRatio="none">
-    <path d="M -50 650 C 200 550, 350 720, 600 600 S 950 480, 1250 560" />
-    <path class="accent-path" d="M -50 200 C 250 120, 300 320, 620 220 S 900 100, 1260 240" />
-  </svg>
   <img class="hero-mark" src="data:image/png;base64,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" alt="">
   <h1 class="hero-title">
     <span class="line-sm">Corpos em</span>
@@ -612,10 +759,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="#1b1915" stroke-width="1.6"><path d="M16 3v10.4a3.6 3.6 0 1 1-3.2-3.58"/><path d="M16 3c.5 2.4 2.2 4 4.6 4.2"/></svg>
         <span>TikTok</span>
       </div>
-      <div class="canal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#1b1915" stroke-width="1.6"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="M6 10.5V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-5.5"/></svg>
-        <span>Escolas</span>
-      </div>
     </div>
     <div class="free-badge reveal"><span class="dot"></span> Acesso 100% gratuito</div>
   </div>
@@ -644,19 +787,50 @@
   </div>
 </section>
 
+<section class="ficha" id="assistente-teaser" style="padding-top:70px; padding-bottom:70px;">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow" style="justify-content:center;">Antes de ir embora</span>
+    <h2 class="reveal" style="font-size:clamp(28px,4vw,42px); margin-top:14px;">Curiosa(o) sobre dança contemporânea?</h2>
+    <p class="reveal" style="max-width:52ch; margin:16px auto 0; font-size:15.5px; line-height:1.7; color:var(--ink-soft);">Converse com a nossa assistente: ela explica o básico do assunto e também te faz algumas perguntas rápidas pra descobrir o que você já pensa sobre dança.</p>
+    <button class="assist-opt assist-cta reveal" style="display:inline-block; margin-top:26px; padding:13px 26px;" onclick="window.__openAssistant && window.__openAssistant()">Conversar com a assistente</button>
+  </div>
+</section>
+
 <footer id="contato">
   <div class="wrap cta">
     <h2 class="reveal">Vamos colocar<br>esse projeto<span class="accent">em movimento?</span></h2>
-    <p class="cta-sub reveal">Esta é uma versão demonstrativa da identidade e da proposta de site para o projeto Corpos em Movimento — pronta para apresentação e ajustes junto ao cliente.</p>
   </div>
   <div class="footer-bottom wrap">
     <div class="footer-brand">
       <img src="data:image/png;base64,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" alt="">
       <span>Corpos em Movimento</span>
     </div>
-    <span class="fine">© 2026 · Corpos em Movimento · Protótipo de demonstração</span>
+    <span class="fine">© 2026 · Corpos em Movimento</span>
   </div>
 </footer>
+
+<button class="assist-fab" id="assistFab">
+  <span class="fab-dot"></span> Fale com a assistente
+</button>
+
+<div class="assist-overlay" id="assistOverlay">
+  <div class="assist-panel">
+    <div class="assist-head">
+      <div class="assist-head-id">
+        <img src="data:image/png;base64,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" alt="">
+        <div>
+          <span class="name">Assistente</span>
+          <span class="sub">Corpos em Movimento</span>
+        </div>
+      </div>
+      <button class="assist-close" id="assistClose" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="assist-body" id="assistBody"></div>
+    <div class="assist-foot">
+      <button class="restart" id="assistRestart">Recomeçar conversa</button>
+    </div>
+  </div>
+</div>
 
 <script>
   const nav = document.getElementById('nav');
@@ -679,6 +853,252 @@
   }, { threshold: 0.15 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+<script>
+(function(){
+  // ---------- CONTEÚDO DA ASSISTENTE (roteirizado, sem IA externa) ----------
+  const LEARN = {
+    o_que_e: {
+      label: "O que é dança contemporânea?",
+      text: "É uma linguagem de movimento que surgiu no século 20 como reação às regras rígidas do ballet clássico. Em vez de posições fixas, ela valoriza a expressividade do corpo, o uso do chão, a respiração e a pesquisa de movimento de cada artista."
+    },
+    origem: {
+      label: "De onde ela veio?",
+      text: "Ela nasceu quando bailarinas como Isadora Duncan passaram a dançar descalças, sem espartilho e sem seguir as regras do ballet acadêmico. Ao longo do século 20, artistas como Martha Graham e Merce Cunningham criaram novas técnicas de movimento, dando origem ao que hoje chamamos de dança contemporânea."
+    },
+    diferenca: {
+      label: "Como ela é diferente do ballet clássico?",
+      text: "O ballet clássico segue uma técnica codificada, com posições padronizadas há séculos. A dança contemporânea não tem um único método: cada coreógrafo pode criar sua própria linguagem, usar o peso do corpo, o chão e até a improvisação como parte da obra."
+    },
+    nomes: {
+      label: "Quem são os nomes importantes?",
+      text: "Isadora Duncan, Martha Graham, Merce Cunningham e Pina Bausch são referências centrais — cada uma propôs uma forma diferente de pensar o corpo em movimento, da expressão emocional de Graham à dança-teatro de Pina Bausch."
+    },
+    brasil: {
+      label: "E no Brasil?",
+      text: "O Brasil tem uma cena forte e reconhecida, com grupos como o Grupo Corpo (Belo Horizonte) e coreógrafas como Deborah Colker, que misturam referências brasileiras com pesquisa contemporânea de movimento."
+    }
+  };
+
+  const QUIZ = [
+    {
+      q: "Quando você pensa em dança contemporânea, a primeira imagem que vem à cabeça é...",
+      opts: [
+        {t:"Movimentos livres, meio abstratos", fam:1, open:1},
+        {t:"Bailarinos de ballet, só que mais \u201cmoderno\u201d", fam:0, open:0},
+        {t:"Sinceramente, não sei bem o que é", fam:0, open:0},
+        {t:"Já vi apresentações ao vivo", fam:1, open:1}
+      ]
+    },
+    {
+      q: "Você acha que ela precisa seguir alguma técnica fixa, tipo o ballet?",
+      opts: [
+        {t:"Sim, imagino que tenha regras rígidas", fam:0, open:0},
+        {t:"Não, acho que é mais livre", fam:1, open:1},
+        {t:"Não sei dizer", fam:0, open:0}
+      ]
+    },
+    {
+      q: "Você já assistiu alguma peça ou vídeo de dança contemporânea?",
+      opts: [
+        {t:"Sim, várias vezes", fam:2, open:1},
+        {t:"Já vi uma ou duas", fam:1, open:1},
+        {t:"Nunca vi", fam:0, open:0}
+      ]
+    },
+    {
+      q: "O que mais te atrai (ou afastaria) nesse tipo de dança?",
+      opts: [
+        {t:"A liberdade de movimento", fam:0, open:1},
+        {t:"A parte emocional, a expressão", fam:0, open:1},
+        {t:"Acho meio difícil de entender", fam:0, open:0},
+        {t:"Não sei dizer", fam:0, open:0}
+      ]
+    },
+    {
+      q: "O quanto você acha que dança consegue contar uma história sem palavras?",
+      opts: [
+        {t:"Totalmente", fam:0, open:2},
+        {t:"Em parte", fam:0, open:1},
+        {t:"Não creio muito", fam:0, open:0}
+      ]
+    }
+  ];
+
+  const RESULTS = {
+    conhecedora: {
+      title: "Você já tem contato com isso",
+      text: "Pelas suas respostas, dança contemporânea não é exatamente novidade pra você — você já assistiu, já reparou que não tem uma técnica única. O documentário Corpos em Movimento tende a te mostrar bastidores e histórias que talvez você ainda não conheça, mesmo já sendo familiarizada(o) com o assunto."
+    },
+    aberta: {
+      title: "Curiosa(o) e de mente aberta",
+      text: "Você talvez não conheça tanto do assunto ainda, mas suas respostas mostram bastante abertura — você acredita que o corpo pode expressar e contar histórias sem palavras. Esse é exatamente o tipo de olhar que o documentário Corpos em Movimento foi feito para alcançar."
+    },
+    cetica: {
+      title: "Ceticismo, e tudo bem",
+      text: "Suas respostas mostram um pé atrás com a dança contemporânea — talvez pareça abstrata ou difícil de entender à primeira vista. É uma reação super comum, e é exatamente o tipo de estranhamento que o documentário Corpos em Movimento pretende desmontar, mostrando o processo por trás do movimento."
+    },
+    iniciante: {
+      title: "Iniciante curiosa(o)",
+      text: "Você ainda está descobrindo o que é dança contemporânea, e não tem problema nenhum nisso — é aliás o público perfeito para o documentário Corpos em Movimento, pensado para apresentar o tema desde o começo, sem pré-requisitos."
+    }
+  };
+
+  function computeResult(fam, open){
+    if (fam >= 3) return RESULTS.conhecedora;
+    if (open >= 4) return RESULTS.aberta;
+    if (open <= 1) return RESULTS.cetica;
+    return RESULTS.iniciante;
+  }
+
+  // ---------- MOTOR DE CONVERSA ----------
+  const body = document.getElementById('assistBody');
+  let famScore = 0, openScore = 0;
+
+  function scrollDown(){ body.scrollTop = body.scrollHeight; }
+
+  function addMsg(text, who){
+    const div = document.createElement('div');
+    div.className = 'msg ' + who;
+    div.textContent = text;
+    body.appendChild(div);
+    scrollDown();
+  }
+
+  function addTyping(){
+    const div = document.createElement('div');
+    div.className = 'typing';
+    div.id = 'typingNow';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    body.appendChild(div);
+    scrollDown();
+  }
+  function removeTyping(){
+    const t = document.getElementById('typingNow');
+    if (t) t.remove();
+  }
+
+  function botSay(text, delay){
+    return new Promise(resolve => {
+      addTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMsg(text, 'bot');
+        resolve();
+      }, delay || 500);
+    });
+  }
+
+  function addOptions(list){
+    const wrap = document.createElement('div');
+    wrap.className = 'assist-options';
+    list.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'assist-opt' + (opt.cta ? ' assist-cta' : '');
+      btn.textContent = opt.label;
+      btn.addEventListener('click', () => {
+        Array.from(wrap.children).forEach(b => b.disabled = true);
+        addMsg(opt.label, 'user');
+        opt.action();
+      });
+      wrap.appendChild(btn);
+    });
+    body.appendChild(wrap);
+    scrollDown();
+  }
+
+  async function showLearnMenu(){
+    await botSay("Beleza. Escolhe um tema:");
+    const opts = Object.keys(LEARN).map(key => ({
+      label: LEARN[key].label,
+      action: async () => {
+        await botSay(LEARN[key].text, 650);
+        addOptions([
+          {label:"Ver outro tema", action: showLearnMenu},
+          {label:"Quero responder as perguntas agora", action: () => startQuiz()}
+        ]);
+      }
+    }));
+    opts.push({label:"Já entendi, quero responder as perguntas", action: () => startQuiz()});
+    addOptions(opts);
+  }
+
+  async function startQuiz(){
+    famScore = 0; openScore = 0;
+    await botSay("Combinado — são só 5 perguntas rápidas, sem certo ou errado.", 500);
+    askQuiz(0);
+  }
+
+  async function askQuiz(i){
+    if (i >= QUIZ.length){
+      const result = computeResult(famScore, openScore);
+      await botSay("Prontinho! Baseado no que você respondeu:", 600);
+      await botSay(result.title.toUpperCase() + " — " + result.text, 900);
+      addOptions([
+        {label:"Ver onde assistir o documentário", cta:true, action: () => {
+          closeAssistant();
+          const el = document.getElementById('onde');
+          if (el) el.scrollIntoView({behavior:'smooth'});
+        }},
+        {label:"Quero saber mais sobre o tema", action: showLearnMenu}
+      ]);
+      return;
+    }
+    const item = QUIZ[i];
+    await botSay(item.q, 550);
+    addOptions(item.opts.map(o => ({
+      label: o.t,
+      action: () => {
+        famScore += o.fam; openScore += o.open;
+        askQuiz(i+1);
+      }
+    })));
+  }
+
+  async function startConversation(){
+    body.innerHTML = '';
+    await botSay("Oi! Eu sou a assistente do documentário Corpos em Movimento.", 400);
+    await botSay("Posso te contar sobre dança contemporânea, ou te fazer perguntas rápidas pra descobrir o que você já pensa sobre o assunto. O que prefere?", 700);
+    addOptions([
+      {label:"Quero aprender", action: showLearnMenu},
+      {label:"Quero responder perguntas", action: startQuiz},
+      {label:"Os dois!", action: showLearnMenu}
+    ]);
+  }
+
+  // ---------- ABRIR / FECHAR ----------
+  const fab = document.getElementById('assistFab');
+  const overlay = document.getElementById('assistOverlay');
+  const closeBtn = document.getElementById('assistClose');
+  const restartBtn = document.getElementById('assistRestart');
+  let started = false;
+
+  function openAssistant(){
+    overlay.classList.add('open');
+    if (!started){ started = true; startConversation(); }
+  }
+  function closeAssistant(){
+    overlay.classList.remove('open');
+  }
+
+  fab.addEventListener('click', openAssistant);
+  closeBtn.addEventListener('click', closeAssistant);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeAssistant(); });
+  restartBtn.addEventListener('click', () => { started = true; startConversation(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAssistant(); });
+
+  window.__openAssistant = openAssistant;
+
+  // esconde o botão flutuante quando o rodapé já está visível, pra não sobrepor
+  const footEl = document.querySelector('footer');
+  if (footEl){
+    const fabObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => fab.classList.toggle('hidden', entry.isIntersecting));
+    }, { threshold: 0.4 });
+    fabObs.observe(footEl);
+  }
+})();
 </script>
 
 </body>
